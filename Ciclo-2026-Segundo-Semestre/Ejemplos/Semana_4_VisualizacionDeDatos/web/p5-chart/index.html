@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Semana 4 · Gráfica web con p5.js</title>
+  <style>
+    body { margin: 0; background: #1E1E2F; color: #F2F4F8; font-family: system-ui, sans-serif; }
+    header { padding: 16px 24px 0; }
+    h1 { margin: 0; font-size: 22px; }
+    p { margin: 4px 0 0; color: #9AA0B4; font-size: 14px; }
+    .barra { display: flex; gap: 12px; align-items: center; padding: 12px 24px; flex-wrap: wrap; }
+    button { background: #4DA3FF; color: #1E1E2F; border: 0; border-radius: 8px; padding: 8px 14px; font-weight: 600; cursor: pointer; }
+    button.secundario { background: #34344F; color: #F2F4F8; }
+    #estado { color: #9AA0B4; font-size: 14px; }
+    main { padding: 0 24px 24px; }
+  </style>
+  <!-- p5.js: la versión oficial de Processing para la web -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.11/p5.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Gráfica web con p5.js</h1>
+    <p>Datos simulados por defecto. En Chrome o Edge puedes leer el ESP32/Arduino por USB con Web Serial.</p>
+  </header>
+  <div class="barra">
+    <button id="btnSerial">Conectar puerto serial</button>
+    <button id="btnSimular" class="secundario">Usar datos simulados</button>
+    <span id="estado">Modo: simulado</span>
+  </div>
+  <main id="lienzo"></main>
+  <script src="sketch.js"></script>
+</body>
+</html>

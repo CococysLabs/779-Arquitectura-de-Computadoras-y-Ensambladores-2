@@ -1,0 +1,15 @@
+# Semana 5 · Broker MQTT Mosquitto en Docker
+# Levantar:   docker compose up -d
+# Ver flujo:  docker compose logs -f mosquitto
+# Detener:    docker compose down
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    ports:
+      - "1883:1883"   # MQTT (ESP32, simulador, MQTT Explorer)
+      - "9001:9001"   # MQTT sobre WebSockets (dashboards web)
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+    restart: unless-stopped
