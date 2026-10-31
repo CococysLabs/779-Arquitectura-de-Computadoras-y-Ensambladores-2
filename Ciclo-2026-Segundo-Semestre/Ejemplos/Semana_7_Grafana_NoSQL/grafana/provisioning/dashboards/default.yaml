@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: Semana 7
+    orgId: 1
+    folder: Semana 7
+    type: file
+    disableDeletion: true
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards

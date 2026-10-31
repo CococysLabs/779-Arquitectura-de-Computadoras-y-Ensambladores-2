@@ -1,0 +1,390 @@
+{
+  "uid": "temperatura-demo",
+  "title": "Semana 7 · Grafana y NoSQL · Temperaturas",
+  "description": "Responsable: Wendy Mazariegos. Ejemplo didáctico con datos simulados almacenados en MongoDB.",
+  "schemaVersion": 41,
+  "version": 1,
+  "editable": true,
+  "timezone": "America/Guatemala",
+  "refresh": "5s",
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "tags": [
+    "Semana7",
+    "MongoDB",
+    "temperatura"
+  ],
+  "panels": [
+    {
+      "id": 1,
+      "title": "Última lectura · sensor-01",
+      "type": "stat",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "temperaturas-json"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 5
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "temperaturas-json"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "timeseries",
+          "url": "http://api:8000/lecturas?dispositivo=sensor-01&desde=${__from:date:iso}&hasta=${__to:date:iso}",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "fecha",
+              "text": "Fecha",
+              "type": "timestamp"
+            },
+            {
+              "selector": "valor",
+              "text": "Temperatura",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "area",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Temperatura actual · umbral 30 °C",
+      "type": "gauge",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "temperaturas-json"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 0,
+        "w": 8,
+        "h": 5
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "temperaturas-json"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "timeseries",
+          "url": "http://api:8000/lecturas?dispositivo=sensor-01&desde=${__from:date:iso}&hasta=${__to:date:iso}",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "fecha",
+              "text": "Fecha",
+              "type": "timestamp"
+            },
+            {
+              "selector": "valor",
+              "text": "Temperatura",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          },
+          "min": 0,
+          "max": 50,
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      }
+    },
+    {
+      "id": 3,
+      "type": "text",
+      "title": "¿Qué estamos viendo?",
+      "gridPos": {
+        "x": 16,
+        "y": 0,
+        "w": 8,
+        "h": 5
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Responsable: Wendy Mazariegos**\n\nDatos simulados, cada 5 segundos.\n\nMongoDB conserva los documentos; Grafana representa las lecturas.\n\nRojo desde **30 °C**: umbral visual didáctico."
+      }
+    },
+    {
+      "id": 4,
+      "title": "Historial de temperatura · datos almacenados en MongoDB",
+      "type": "timeseries",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "temperaturas-json"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 24,
+        "h": 10
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "temperaturas-json"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "timeseries",
+          "url": "http://api:8000/lecturas?dispositivo=sensor-01&desde=${__from:date:iso}&hasta=${__to:date:iso}",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "fecha",
+              "text": "Fecha",
+              "type": "timestamp"
+            },
+            {
+              "selector": "valor",
+              "text": "Temperatura",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "always",
+            "pointSize": 4,
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Documentos consultados · orden cronológico",
+      "type": "table",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "temperaturas-json"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "temperaturas-json"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://api:8000/lecturas?dispositivo=sensor-01&desde=${__from:date:iso}&hasta=${__to:date:iso}",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "fecha",
+              "text": "Fecha",
+              "type": "timestamp"
+            },
+            {
+              "selector": "valor",
+              "text": "Temperatura",
+              "type": "number"
+            },
+            {
+              "selector": "dispositivo",
+              "text": "Dispositivo",
+              "type": "string"
+            },
+            {
+              "selector": "estado",
+              "text": "Estado",
+              "type": "string"
+            },
+            {
+              "selector": "origen",
+              "text": "Origen",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Fecha"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Fecha",
+            "desc": true
+          }
+        ]
+      }
+    }
+  ],
+  "annotations": {
+    "list": []
+  },
+  "templating": {
+    "list": []
+  }
+}

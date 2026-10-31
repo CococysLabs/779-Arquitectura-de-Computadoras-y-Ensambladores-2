@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Wendy Mazariegos">
+<title>Semana 8 · Automatización y Edge</title>
+<style>
+:root{color-scheme:light;--ink:#183238;--green:#147d68;--paper:#f3f6f3;--line:#d9e4df}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1080px;margin:auto;padding:38px 24px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:.14em;color:var(--green);text-transform:uppercase}h1{font-size:clamp(28px,4vw,44px);line-height:1.12;margin:10px 0 14px;letter-spacing:-.035em}h2{font-size:18px;margin:0 0 12px}p{margin:8px 0}.intro{max-width:730px;color:#50656a}.credit{font-size:14px;margin:15px 0 26px}
+.layout{display:grid;grid-template-columns:1.05fr 1fr;gap:20px}.card{background:white;border:1px solid var(--line);border-radius:20px;padding:25px}.reading{font-size:64px;font-weight:750;letter-spacing:-.06em;line-height:1.2;margin:16px 0}.reading span{font-size:27px;letter-spacing:0;color:#647a7d}label{display:block;font-weight:650}input[type=range]{width:100%;accent-color:var(--green);margin:22px 0 8px;cursor:pointer}.limits{display:flex;justify-content:space-between;font-size:13px;color:#62777a}button{font:inherit;border:1px solid var(--line);padding:10px 14px;border-radius:10px;background:white;color:var(--ink);cursor:pointer}button:hover{background:#ecf4ef}button:focus-visible,input:focus-visible{outline:3px solid #319cbd;outline-offset:4px}.primary{background:var(--green);color:white;border-color:var(--green)}.primary:hover{background:#0e6554}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.rule{background:#f0f6f2;border-radius:12px;padding:14px;margin-top:24px;font-size:14px}.rule strong{color:#0e6958}
+.fan-card{text-align:center;display:flex;align-items:center;justify-content:center;flex-direction:column}.fan-wrap{width:170px;height:170px;border-radius:50%;background:#edf2ef;display:grid;place-items:center;margin:12px auto 15px;border:1px solid var(--line)}svg{width:140px;height:140px;color:#95aaa5}.active svg{color:var(--green)}.active #rotor{animation:spin 1s linear infinite;transform-origin:70px 70px}@keyframes spin{to{transform:rotate(360deg)}}.badge{border-radius:100px;padding:6px 18px;display:inline-block;background:#e9eeec;font-weight:750;color:#526762}.active .badge{background:#daf2e4;color:#0c6d4a}.pin{font-family:ui-monospace,monospace;font-size:14px;margin-top:14px}.decision{min-height:54px;max-width:350px;color:#52666a;font-size:14px}
+.path{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.step{padding:17px;border:1px solid var(--line);border-radius:13px;background:#eaf1ec}.step b{display:block;font-size:14px}.step small{display:block;color:#546e68;margin-top:5px}.history{margin-top:6px}table{width:100%;border-collapse:collapse;text-align:left;font-size:14px}th,td{padding:11px 10px;border-bottom:1px solid var(--line)}th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#617973}.table-scroll{overflow-x:auto}.foot{font-size:13px;color:#61767a;margin-top:20px}.local{background:#e0efe7;color:#17654f;padding:4px 10px;border-radius:6px;font-size:12px;display:inline-block;margin-bottom:12px}
+@media(max-width:680px){main{padding:24px 16px}.layout{grid-template-columns:1fr}.path{grid-template-columns:1fr}.card{padding:21px}th,td{padding:10px 6px}.reading{font-size:54px}}
+@media(prefers-reduced-motion:reduce){.active #rotor{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="eyebrow">Semana 8 · Ejemplo práctico</div><h1>La temperatura decide.<br>El ventilador responde.</h1><p class="intro">Modifica la lectura del sensor y observa cómo una regla local activa la salida. La simulación funciona en este navegador, sin Internet ni servidores.</p><p class="credit">Responsable del material: <strong>Wendy Mazariegos</strong></p></header>
+<div class="layout">
+<section class="card"><h2>1. Sensor de temperatura</h2><div class="reading"><output id="temperatura" for="control">24.0</output> <span>°C</span></div><label for="control">Cambiar temperatura simulada</label><input id="control" type="range" min="15" max="40" step="0.5" value="24"><div class="limits"><span>15 °C</span><span>40 °C</span></div><div class="actions"><button id="reproducir" class="primary">Reproducir ejemplo</button><button id="reiniciar">Reiniciar</button></div><div class="rule"><strong>Regla del dispositivo</strong><br>Desde 30 °C → encender.<br>Hasta 28 °C → apagar.<br>Entre ambos valores → conservar el estado anterior.</div></section>
+<section class="card fan-card" id="salida"><span class="local">Decisión local · Edge</span><h2>2. Salida del dispositivo</h2><div class="fan-wrap"><svg viewBox="0 0 140 140" role="img" aria-label="Ventilador simulado"><circle cx="70" cy="70" r="64" fill="none" stroke="currentColor" stroke-width="3"/><g id="rotor" fill="currentColor"><ellipse cx="70" cy="43" rx="13" ry="25"/><ellipse cx="70" cy="43" rx="13" ry="25" transform="rotate(120 70 70)"/><ellipse cx="70" cy="43" rx="13" ry="25" transform="rotate(240 70 70)"/><circle cx="70" cy="70" r="12"/></g></svg></div><div aria-live="polite"><span class="badge" id="estado">APAGADO</span><p class="pin" id="pin">D8 = LOW · salida inactiva</p><p class="decision" id="decision">24.0 °C: está en el rango de apagado.</p></div></section>
+</div>
+<div class="path" aria-label="Recorrido de una lectura"><div class="step"><b>01 · Leer</b><small>El sensor entrega una temperatura.</small></div><div class="step"><b>02 · Decidir</b><small>El dispositivo compara los umbrales.</small></div><div class="step"><b>03 · Actuar</b><small>La salida enciende o apaga el ventilador.</small></div></div>
+<section class="card history"><h2>Registro de decisiones</h2><p class="intro">Las últimas ocho lecturas de esta sesión. El historial se reinicia al cerrar o recargar la página.</p><div class="table-scroll"><table><thead><tr><th>Paso</th><th>Temperatura</th><th>Salida D8</th><th>Ventilador</th></tr></thead><tbody id="registro"></tbody></table></div></section>
+<p class="foot">Simulación educativa: no mide un sensor ni controla hardware desde el navegador. El código Arduino incluido ejecuta la misma regla en la placa. El intervalo de 28 a 30 °C evita cambios repetidos cerca de un solo umbral (histéresis).</p>
+</main>
+<script>
+// Responsable del material: Wendy Mazariegos.
+'use strict';
+const ENCENDER = 30;
+const APAGAR = 28;
+let encendido = false;
+let paso = 0;
+let temporizador = null;
+const control = document.getElementById('control');
+const boton = document.getElementById('reproducir');
+function decidir(temperatura, anterior) {
+  if (temperatura >= ENCENDER) return true;
+  if (temperatura <= APAGAR) return false;
+  return anterior;
+}
+function actualizar(valor) {
+  const temperatura = Number(valor);
+  encendido = decidir(temperatura, encendido);
+  control.value = String(temperatura);
+  document.getElementById('temperatura').textContent = temperatura.toFixed(1);
+  document.getElementById('salida').classList.toggle('active', encendido);
+  document.getElementById('estado').textContent = encendido ? 'ENCENDIDO' : 'APAGADO';
+  document.getElementById('pin').textContent = encendido ? 'D8 = HIGH · salida activa' : 'D8 = LOW · salida inactiva';
+  const motivo = temperatura >= ENCENDER ? 'alcanzó el umbral de encendido.' :
+    temperatura <= APAGAR ? 'está en el rango de apagado.' : 'está entre 28 y 30 °C; conserva el estado anterior.';
+  document.getElementById('decision').textContent = temperatura.toFixed(1)+' °C: '+motivo;
+  const fila = document.createElement('tr');
+  for (const dato of [++paso, temperatura.toFixed(1)+' °C', encendido ? 'HIGH' : 'LOW', encendido ? 'ENCENDIDO' : 'APAGADO']) {
+    const celda = document.createElement('td');
+    celda.textContent = String(dato);
+    fila.appendChild(celda);
+  }
+  const registro = document.getElementById('registro');
+  registro.prepend(fila);
+  while (registro.children.length > 8) registro.lastElementChild.remove();
+}
+function detener() {
+  clearInterval(temporizador);
+  temporizador = null;
+  boton.textContent = 'Reproducir ejemplo';
+}
+function reiniciar() {
+  detener();
+  encendido = false;
+  paso = 0;
+  document.getElementById('registro').replaceChildren();
+  actualizar(24);
+}
+control.addEventListener('input', () => { detener(); actualizar(control.value); });
+boton.addEventListener('click', () => {
+  if (temporizador !== null) { detener(); return; }
+  reiniciar();
+  const secuencia = [29, 30, 32, 29, 28];
+  let indice = 0;
+  boton.textContent = 'Pausar ejemplo';
+  temporizador = setInterval(() => {
+    actualizar(secuencia[indice++]);
+    if (indice === secuencia.length) detener();
+  }, 1600);
+});
+document.getElementById('reiniciar').addEventListener('click', reiniciar);
+reiniciar();
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+name: semana7-temperaturas
+services:
+  mongodb:
+    image: mongo:8.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:?Copia .env.example a .env}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Falta MONGO_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo:/ejemplos:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin --eval 'db.adminCommand({ping:1})' >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  api:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  sensor:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    command: ["python", "-u", "-m", "app.simulator"]
+    environment:
+      API_URL: http://api:8000
+      INTERVALO_SEGUNDOS: "5"
+    depends_on:
+      api:
+        condition: service_healthy
+  grafana:
+    image: grafana/grafana:12.2.5
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_PLUGINS_PREINSTALL_SYNC: yesoreyeram-infinity-datasource@4.1.5
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  mongo_data:
+  grafana_data:
