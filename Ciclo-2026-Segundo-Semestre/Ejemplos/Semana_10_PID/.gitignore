@@ -1,0 +1,5 @@
+# Archivos que genera cada estudiante al ejecutar el ejemplo
+resultados/
+__pycache__/
+*.py[cod]
+.venv/
