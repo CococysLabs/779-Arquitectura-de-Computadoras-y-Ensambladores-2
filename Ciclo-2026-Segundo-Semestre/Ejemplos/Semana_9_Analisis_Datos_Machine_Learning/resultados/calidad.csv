@@ -1,0 +1,26 @@
+fila_csv,minuto,temperatura_c,resultado
+2,0,22.0,válida
+3,1,22.45,válida
+4,2,22.6,válida
+5,3,23.25,válida
+6,4,23.3,válida
+7,5,23.75,válida
+8,5,23.75,minuto duplicado
+9,6,24.2,válida
+10,7,24.25,válida
+11,8,24.9,válida
+12,9,25.15,válida
+13,8.5,,dato vacío o no numérico
+14,10,25.4,válida
+15,11,26.05,válida
+16,12,26.2,válida
+17,11.5,error,dato vacío o no numérico
+18,13,26.45,válida
+19,14,27.0,válida
+20,15,27.15,válida
+21,14.5,85,fuera del rango del laboratorio (0–50 °C)
+22,16,27.6,válida
+23,17,28.05,válida
+24,18,28.2,válida
+25,sin_dato,25,dato vacío o no numérico
+26,19,28.75,válida
