@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laboratorio IoT | Monitoreo y control</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <div>
+        <p class="eyebrow">ARQUITECTURA DE COMPUTADORAS Y ENSAMBLADORES 2</p>
+        <h1>Estación de monitoreo IoT</h1>
+        <p class="subheading">Temperatura · MQTT · SQLite · Ventilación simulada</p>
+      </div>
+      <div class="statuses"><span id="broker-status" class="pill">Broker: verificando…</span><span id="device-status" class="pill">Nodo: verificando…</span></div>
+    </header>
+    <section class="metrics" aria-label="Resumen">
+      <article class="metric"><span>Temperatura actual</span><strong id="temperatura">—</strong><small>Lectura más reciente</small></article>
+      <article class="metric"><span>Ventilador virtual</span><strong id="ventilador">—</strong><small id="modo">Modo: —</small></article>
+      <article class="metric"><span>Lecturas guardadas</span><strong id="total">0</strong><small>Persistidas en SQLite</small></article>
+      <article class="metric"><span>Último registro (UTC)</span><strong id="fecha" class="date-text">—</strong><small>Identificador: nodo-01</small></article>
+    </section>
+    <div class="content-grid">
+      <section class="panel chart-panel">
+        <div class="panel-head"><div><h2>Histórico de temperatura</h2><p>Últimas 50 lecturas válidas</p></div><span class="legend">● Temperatura (°C)</span></div>
+        <svg id="chart" role="img" aria-label="Gráfica de temperatura" viewBox="0 0 640 250" preserveAspectRatio="none"></svg>
+        <div class="chart-foot"><span>Umbral ON: 28 °C</span><span>Umbral OFF: 26 °C</span></div>
+      </section>
+      <section class="panel control-panel">
+        <div class="panel-head"><div><h2>Control del ventilador</h2><p>Comandos MQTT con confirmación</p></div></div>
+        <div class="control-grid">
+          <button id="auto" class="primary">Activar automático</button>
+          <button id="on">Manual · Encender</button>
+          <button id="off">Manual · Apagar</button>
+          <button id="heat" class="warm">Simular calor +6 °C</button>
+        </div>
+        <p id="feedback" role="status" class="feedback">Selecciona una acción para iniciar la prueba.</p>
+        <p class="note">El panel envía una solicitud. El estado de confirmación aparece cuando el nodo responde mediante MQTT; publicar una orden no significa que haya sido ejecutada.</p>
+      </section>
+    </div>
+    <div class="content-grid bottom-grid">
+      <section class="panel"><div class="panel-head"><div><h2>Comandos recientes</h2><p>Pendiente vs. confirmado</p></div></div><div class="table-scroll"><table><thead><tr><th>Hora UTC</th><th>Modo</th><th>Orden</th><th>Resultado</th></tr></thead><tbody id="comandos"><tr><td colspan="4">Sin comandos</td></tr></tbody></table></div></section>
+      <section class="panel"><div class="panel-head"><div><h2>Eventos del sistema</h2><p>Reconexiones, validación y fallas</p></div></div><ul id="eventos" class="event-list"><li>Sin eventos</li></ul></section>
+    </div>
+    <footer>Ejemplo académico · Todos los sensores y actuadores son simulados · Uso local</footer>
+  </main>
+</body>
+</html>

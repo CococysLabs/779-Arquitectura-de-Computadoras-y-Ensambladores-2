@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "author": "Laboratorio ACyE2 - Ejemplo didactico",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 30, "left": 20, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": 0, "left": 335, "attrs": { "color": "white", "label": "LED PWM" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": 65, "left": 315, "attrs": { "value": "220" } },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr1", "top": 185, "left": 345, "attrs": { "lux": "500" } }
+  ],
+  "connections": [
+    ["uno:9", "r1:1", "orange", []],
+    ["r1:2", "led1:A", "orange", []],
+    ["led1:C", "uno:GND.1", "black", []],
+    ["ldr1:AO", "uno:A0", "green", []],
+    ["ldr1:VCC", "uno:5V", "red", []],
+    ["ldr1:GND", "uno:GND.2", "black", []]
+  ]
+}

@@ -1,0 +1,5 @@
+# Archivos que se generan al ejecutar el ejemplo
+datos/
+.venv/
+__pycache__/
+*.py[cod]
