@@ -1,0 +1,26 @@
+{
+  "responsable": "Wendy Mazariegos",
+  "datos": "simulados con errores introducidos",
+  "filas_originales": 25,
+  "filas_validas": 20,
+  "filas_descartadas": 5,
+  "motivos_descarte": {
+    "minuto duplicado": 1,
+    "dato vacío o no numérico": 3,
+    "fuera del rango del laboratorio (0–50 °C)": 1
+  },
+  "entrenamiento": 16,
+  "prueba": 4,
+  "modelo_evaluado": {
+    "pendiente": 0.3474999999999999,
+    "intercepto": 22.025000000000002
+  },
+  "mae_modelo_c": 0.08375000000000021,
+  "mae_base_ultima_lectura_c": 1.0000000000000018,
+  "modelo_final": {
+    "pendiente": 0.34969924812030073,
+    "intercepto": 22.012857142857143
+  },
+  "minuto_futuro": 20.0,
+  "prediccion_futura_c": 29.006842105263157
+}
